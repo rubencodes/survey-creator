@@ -280,6 +280,10 @@ export abstract class PropertyGridEditorMatrix extends PropertyGridEditor {
     if (!!matrix.options) {
       this.setupUsingOptions(obj, matrix, matrix.options, prop);
     }
+    matrix.allowRowsDragAndDrop = this.allowRowsDragAndDrop;
+  }
+  protected get allowRowsDragAndDrop() {
+    return false;
   }
   private calcHasPropertiesInDetail(
     matrix: QuestionMatrixDynamicModel,
@@ -424,7 +428,9 @@ export class PropertyGridEditorMatrixItemValues extends PropertyGridEditorMatrix
   ) {
     super.setupMatrixQuestion(obj, matrix, prop);
     matrix.showHeader = false;
-    matrix.allowRowsDragAndDrop = true;
+  }
+  protected get allowRowsDragAndDrop() {
+    return true;
   }
   public createPropertyEditorSetup(
     obj: Base,
@@ -511,18 +517,26 @@ export class PropertyGridEditorMatrixColumns extends PropertyGridEditorMatrix {
     }
     return res;
   }
+  /* TODO adaptive actions doesn't work. We need to fix it.
+  protected get allowRowsDragAndDrop() {
+    return true;
+  }
+  */
 }
 
 export class PropertyGridEditorMatrixPages extends PropertyGridEditorMatrix {
   public fit(prop: JsonObjectProperty): boolean {
     return prop.type == "surveypages";
   }
-  public onMatrixAllowRemoveRow(obj: Base, options: any): boolean {
-    var page = options.row.editingObj;
-    if (!page || !page.survey) {
-      return;
-    }
-    return page.survey.currentPage !== page;
+  public setupMatrixQuestion(
+    obj: Base,
+    matrix: QuestionMatrixDynamicModel,
+    prop: JsonObjectProperty
+  ) {
+    super.setupMatrixQuestion(obj, matrix, prop);
+    matrix.canRemoveRowsCallback = (allow: boolean): boolean => {
+      return allow && matrix.rowCount > 1;
+    };
   }
   protected getColumnClassName(obj: Base, prop: JsonObjectProperty): string {
     return "page@" + obj.getType();
@@ -538,6 +552,9 @@ export class PropertyGridEditorMatrixPages extends PropertyGridEditorMatrix {
   }
   protected getBaseValue(prop: JsonObjectProperty): string {
     return "page";
+  }
+  protected get allowRowsDragAndDrop() {
+    return true;
   }
 }
 

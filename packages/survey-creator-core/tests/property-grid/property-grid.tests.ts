@@ -359,6 +359,7 @@ test("surveypages property editor", () => {
   );
   expect(pagesQuestion).toBeTruthy();
   expect(pagesQuestion.getType()).toEqual("matrixdynamic");
+  expect(pagesQuestion.allowRowsDragAndDrop).toBeTruthy();
   expect(pagesQuestion.columns).toHaveLength(2);
   expect(pagesQuestion.columns[0].cellType).toEqual("text");
   expect(pagesQuestion.columns[0].title).toEqual("Name");

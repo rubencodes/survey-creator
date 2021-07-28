@@ -1076,28 +1076,29 @@ test("SurveyPropertyPagesEditor koCanDeleteItem + options.", () => {
   survey.setDesignMode(true);
   survey.addNewPage("page1");
   var options = new EmptySurveyCreatorOptions();
-  var allowDeleteAll = false;
+  var allowDeletePages = false;
   options.onCanDeleteItemCallback = (
     object: any,
     item: Base,
     allowDelete: boolean
   ) => {
     if (item.getType() !== "page") return allowDelete;
-    if (allowDeleteAll) return true;
-    return allowDelete;
+    return allowDeletePages;
   };
   var propertyGrid = new PropertyGridModelTester(survey, options);
   var pagesQuestion = <QuestionMatrixDynamicModel>(
     propertyGrid.survey.getQuestionByName("pages")
   );
-  survey.currentPage = survey.pages[0];
-  expect(pagesQuestion.canRemoveRow(pagesQuestion.visibleRows[0])).toBeFalsy();
+  expect(pagesQuestion.canRemoveRows).toBeFalsy();
   survey.addNewPage("page2");
-  survey.currentPage = survey.pages[0];
-  expect(pagesQuestion.canRemoveRow(pagesQuestion.visibleRows[1])).toBeTruthy();
+  expect(pagesQuestion.canRemoveRows).toBeTruthy();
   expect(pagesQuestion.canRemoveRow(pagesQuestion.visibleRows[0])).toBeFalsy();
-  allowDeleteAll = true;
+  expect(pagesQuestion.canRemoveRow(pagesQuestion.visibleRows[1])).toBeFalsy();
+  allowDeletePages = true;
   expect(pagesQuestion.canRemoveRow(pagesQuestion.visibleRows[0])).toBeTruthy();
+  expect(pagesQuestion.canRemoveRow(pagesQuestion.visibleRows[1])).toBeTruthy();
+  survey.removePage(survey.pages[1]);
+  expect(pagesQuestion.canRemoveRows).toBeFalsy();
 });
 
 test("SurveyPropertyPagesEditor koCanDeleteItem + options.", () => {
@@ -1127,6 +1128,10 @@ test("SurveyPropertyPagesEditor koCanDeleteItem + options.", () => {
   survey.currentPage = survey.pages[0];
   expect(pagesQuestion.canRemoveRow(pagesQuestion.visibleRows[1])).toBeFalsy();
   expect(pagesQuestion.canRemoveRow(pagesQuestion.visibleRows[2])).toBeTruthy();
+  pagesQuestion.removeRow(2);
+  pagesQuestion.removeRow(1);
+  expect(survey.pages).toHaveLength(1);
+  expect(pagesQuestion.canRemoveRow(pagesQuestion.visibleRows[0])).toBeFalsy();
 });
 
 test("SurveyPropertyPagesEditor custom loc item for 'add item'.", () => {
