@@ -161,6 +161,7 @@ export var surveyDesignerCss = {
   },
   multipletext: {
     root: "sd-multipletext",
+    itemLabel: "sd-multipletext__item-container sd-input",
     item: "sd-multipletext__item",
     itemTitle: "sd-multipletext__item-title",
     row: "sd-multipletext__row",
