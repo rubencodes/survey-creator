@@ -61,6 +61,16 @@ export class CreatorSurveyPageComponent extends SurveyElementBase<
     );
   }
   renderElement(): JSX.Element {
+    if(this.props.creator.pageEditMode === "single") {
+      return (<div
+        ref={this.rootRef}
+        className={"svc-page__content " + this.model.css}
+        id={this.props.page.id}
+      >
+        {this.renderContent()}
+        {this.renderFooter()}
+      </div>);
+    }
     return (
       attachKey2click(<div
         ref={this.rootRef}

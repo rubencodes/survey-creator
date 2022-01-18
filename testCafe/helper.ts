@@ -1,6 +1,7 @@
 import { Selector, ClientFunction } from "testcafe";
 
 export const url = "http://127.0.0.1:8080/testCafe/testcafe.html";
+export const urlSingle = "http://127.0.0.1:8080/testCafe/testcafe-single.html";
 // export const url =
 //     "http://127.0.0.1:7777/packages/survey-creator-knockout/example/index.html";
 export const base64image =
