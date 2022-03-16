@@ -216,11 +216,26 @@ export class QuestionAdornerViewModel extends ActionContainerViewModel {
     const allowChangeType: boolean = availableTypes.length > 0;
     const curType = this.currentType;
     const selectedItems = availableTypes.filter(item => item.id === curType);
+
+    const separator: IAction = new Action({
+      id: "list_separator",
+      enabled: false,
+    });
+
+    const availableTypesWithSeparators: IAction[] = [];
+    const separatorsAfter: string[] = ["comment", "image", "file", "paneldynamic"];
+    for (let i = 0; i < availableTypes.length; i++) {
+      availableTypesWithSeparators.push(availableTypes[i]);
+      if (i != availableTypes.length - 1 && separatorsAfter.indexOf(availableTypes[i].id) !== -1) {
+        availableTypesWithSeparators.push(separator);
+      }
+    }
+
     const popupModel = new PopupModel(
       "sv-list",
       {
         model: new ListModel(
-          availableTypes,
+          availableTypesWithSeparators,
           (item: any) => {
             this.creator.convertCurrentQuestion(item.id);
           },
