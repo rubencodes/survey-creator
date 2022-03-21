@@ -217,18 +217,16 @@ export class QuestionAdornerViewModel extends ActionContainerViewModel {
     const curType = this.currentType;
     const selectedItems = availableTypes.filter(item => item.id === curType);
 
-    const separator: IAction = new Action({
-      id: "list_separator",
-      enabled: false,
-    });
-
     const availableTypesWithSeparators: IAction[] = [];
-    const separatorsAfter: string[] = ["comment", "image", "file", "paneldynamic"];
+    const separatorsBefore: string[] = ["rating", "html", "matrix"];
     for (let i = 0; i < availableTypes.length; i++) {
-      availableTypesWithSeparators.push(availableTypes[i]);
-      if (i != availableTypes.length - 1 && separatorsAfter.indexOf(availableTypes[i].id) !== -1) {
-        availableTypesWithSeparators.push(separator);
+      const currAction = new Action(availableTypes[i]);
+      if ((i !== availableTypes.length - 1 && separatorsBefore.indexOf(availableTypes[i].id) !== -1)
+        ||
+        (i !== 0 && availableTypes[i - 1].id === "paneldynamic")) {
+        currAction.needSeparator = true;
       }
+      availableTypesWithSeparators.push(currAction);
     }
 
     const popupModel = new PopupModel(
