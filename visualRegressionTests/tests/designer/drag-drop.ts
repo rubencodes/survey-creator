@@ -194,3 +194,44 @@ test("Matrix: Property Grid: Choices", async (t) => {
 
   await checkElementScreenshot("drag-drop-matrix-pg-choices.png", Selector("[data-name=\"choices\"]"), t);
 });
+
+test("Drag Drop Question with StartWithNewLine === false", async (t) => {
+  await t.resizeWindow(2560, 1440);
+  const json = {
+    "logoPosition": "right",
+    "pages": [
+      {
+        "name": "page1",
+        "elements": [
+          {
+            "type": "text",
+            "name": "question1"
+          },
+          {
+            "type": "text",
+            "name": "question2",
+            "startWithNewLine": false
+          },
+          {
+            "type": "text",
+            "name": "question3"
+          }
+        ]
+      }
+    ]
+  };
+
+  await setJSON(json);
+
+  const RatingToolboxItem = Selector("[aria-label='Rating toolbox item']");
+  const RowWith2Questions = Selector(".svc-row").nth(0);
+
+  await t.dragToElement(RatingToolboxItem, RowWith2Questions, {
+    offsetX: 5,
+    offsetY: 5,
+    destinationOffsetY: 0,
+    speed: 0.5
+  });
+
+  await checkElementScreenshot("drag-drop-start-with-new-line.png", Selector(".sd-body__page"), t);
+});
